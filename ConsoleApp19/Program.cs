@@ -63,8 +63,8 @@ class Program
         HeatingService heatingService = new HeatingService();
         report report = new report(heatingService);
         Console.WriteLine( );
-        report.GenerateReport(houes, heaterEL, daysInMonth);
-        report.GenerateReport(houes, heatercas, daysInMonth);
+        report.GenerateReport(houes, houes.heaters, daysInMonth);
+        
 
 
 
