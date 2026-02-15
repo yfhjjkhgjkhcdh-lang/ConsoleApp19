@@ -27,7 +27,7 @@ namespace ConsoleApp19
             if (count % 2 == 0)
             {
                 // If even, average the two middle values
-                return (value[count / 2 - 1] + value[count / 2]) / 2;
+                return (value[count / 2 ] + value[count / 2+1]) / 2;
             }
             else
             {
@@ -37,7 +37,7 @@ namespace ConsoleApp19
 
 
         }
-        public double CalculateMonthlyAverageCost(int day,Heater heater,Houes houes1)
+        public double CalculateMonthlyAverageCost(int day, Heater heater, Houes houes1)
         {
            List <double> heaterValues = new List<double>();
             foreach (var dailyUse in houes1.dailyUses)

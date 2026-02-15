@@ -13,18 +13,21 @@ namespace ConsoleApp19
         {
             this.heatingService = heatingService;
         }
-        public void GenerateReport(Houes houes1, Heater heater, int day)
+        public void GenerateReport(Houes houes1, List<Heater> heater, int day)
         {
-            double averageCost = heatingService.CalculateMonthlyAverageCost(day, heater, houes1);
-            if (heater.GetType() == typeof(HeaterEL))
+            foreach (var item in heater)
             {
-                Console.WriteLine("Electric Heater Report:");
+                double averageCost = heatingService.CalculateMonthlyAverageCost(day, item, houes1);
+                if (heater.GetType() == typeof(HeaterEL))
+                {
+                    Console.WriteLine("Electric Heater Report:");
+                }
+                else if (heater.GetType() == typeof(Heatercas))
+                {
+                    Console.WriteLine("Gas Heater Report:");
+                }
+                Console.WriteLine($"The average monthly cost of  heating is: {averageCost:C}");
             }
-            else if (heater.GetType() == typeof(Heatercas))
-            {
-                Console.WriteLine("Gas Heater Report:");
-            }
-            Console.WriteLine($"The average monthly cost of  heating is: {averageCost:C}");
         }
     }
 }

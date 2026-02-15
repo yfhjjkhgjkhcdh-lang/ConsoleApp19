@@ -8,10 +8,36 @@ class Program
         string ownerName = Console.ReadLine();
         Owner owner = new Owner(ownerName);
         Houes houes = new Houes(owner);
+
         Heater heaterEL = new HeaterEL();
         Heater heatercas = new Heatercas();
-        houes.AddHeater(heaterEL);
-        houes.AddHeater(heatercas);
+       
+        
+        foreach (var item in Enum.GetValues(typeof(HeaterType)))
+        {
+            Console.WriteLine($"{(int)item}-{item}");
+        }
+        while (true)
+        {
+            Console.Write("Select heater type (1 or 2): ");
+            int heaterType = Convert.ToInt32(Console.ReadLine());
+            if (heaterType == 1)
+            {
+                houes.AddHeater(heaterEL);
+                break;
+            }
+            else if (heaterType == 2)
+            {
+                houes.AddHeater(heatercas);
+                break;
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid selection. Please enter 1 or 2.");
+            }
+        }
+
 
         Console.Write("Enter year: ");
         int year = int.Parse(Console.ReadLine());
@@ -56,15 +82,16 @@ class Program
                 Console.Clear();
                 Console.WriteLine("Value must be positive.");
             }
+            Console.Clear();
             DailyUse dailyUse = new DailyUse(workingHours, heaterValue);
             houes.dailyUses.Add(dailyUse);
 
         }
         HeatingService heatingService = new HeatingService();
         report report = new report(heatingService);
-        Console.WriteLine( );
+        Console.WriteLine();
         report.GenerateReport(houes, houes.heaters, daysInMonth);
-        
+
 
 
 
@@ -72,7 +99,12 @@ class Program
 
 
     }
-    }
+    enum HeaterType
+    {
+        Electric,
+        Gas
+    };
+}
 
 
 
