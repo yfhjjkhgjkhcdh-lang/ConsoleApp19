@@ -53,7 +53,7 @@ namespace ConsoleApp19
         {
             value.Sort();
             int count = value.Count;
-            if (count % 2 == 0)
+            if (count.IsEven())
             {
                 // If even, average the two middle values
                 return (value[count / 2 ] + value[count / 2+1]) / 2;
