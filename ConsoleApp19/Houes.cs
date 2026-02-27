@@ -1,29 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp19
 {
-    internal class Houes
+    internal class House
     {
-        public Owner owner { get; }
-        public List<Heater> heaters { get;  }
-        public Houes(Owner owner)
-        {
-            this.owner = owner;
-                heaters = new List<Heater>();
-                dailyUses = new List<DailyUse>();
-            
-        }
-        public void AddHeater(Heater heater)
-        {
-            heaters.Add(heater);
-        }
-        public List<DailyUse> dailyUses { get; }
+        public Owner Owner { get; }
         
 
+        public List<Heater?> Heaters { get; }
+        public List<DailyUse> DailyUses { get; }
 
+        public House(Owner owner)
+        {
+            Owner = owner;
+            Heaters = new List<Heater>();
+            DailyUses = new List<DailyUse>();
+        }
+
+        public void AddHeater(Heater heater)
+        {
+            Heaters.Add(heater);
+        }
+
+        public void Subscribe(Heater heater)
+        {
+            heater.openHter+= Heater_OpenHeater;
+            heater.closeHter += OnHeaterClosed;
+        }
+
+        private void Heater_OpenHeater(object sender)
+        {
+            Console.WriteLine("Heater is open");
+        }
+
+        private void OnHeaterClosed(object sender, double hours)
+        {
+            Heater heater = (Heater)sender;
+
+            var usage = new DailyUse(
+               
+                hours,
+                heater.power,DateTime.UtcNow); 
+
+            DailyUses.Add(usage);
+
+            Console.WriteLine(
+                $"Heater {heater.HeaterId} closed. Hours: {hours:F4}");
+        }
     }
 }

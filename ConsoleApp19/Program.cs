@@ -1,18 +1,24 @@
 ﻿using ConsoleApp19;
 using System;
+using System.Threading.Channels;
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         Console.WriteLine("Enter owner name");
         string ownerName = Console.ReadLine();
-        Owner owner = new Owner(ownerName);
-        Houes houes = new Houes(owner);
+        Console.WriteLine($"Enter owner ID");
+        int id=int.Parse( Console.ReadLine() );
 
-        Heater heaterEL = new HeaterEL();
-        Heater heatercas = new Heatercas();
-       
+        Owner owner = new Owner(ownerName,id);
+
+        House houes = new House(owner);
+
+        Heater heaterEL = new ElectricHeater ();
+        Heater heatercas = new GasHeater();
         
+
+
         foreach (var item in Enum.GetValues(typeof(HeaterType)))
         {
             Console.WriteLine($"{(int)item}-{item}");
@@ -24,73 +30,39 @@ class Program
             if (heaterType == 1)
             {
                 houes.AddHeater(heaterEL);
+                houes.Subscribe(heaterEL);
                 break;
             }
             else if (heaterType == 2)
             {
                 houes.AddHeater(heatercas);
+                houes.Subscribe(heatercas);
                 break;
             }
+
             else
             {
                 Console.Clear();
                 Console.WriteLine("Invalid selection. Please enter 1 or 2.");
             }
         }
+        HeatingService service = new HeatingService();
+        await service.SafeOpenAsync(houes, 0);
+        
+        houes.Heaters[0]?.Close();
+
+        var weatherData = await service.LoadLastMonthWeatherAsync();
+        houes.DailyUses.AddRange(weatherData);
 
 
-        Console.Write("Enter year: ");
-        int year = int.Parse(Console.ReadLine());
-
-        Console.Write("Enter month (1 - 12): ");
-        int month = int.Parse(Console.ReadLine());
-
-        GetDayInMonth days = new GetDayInMonth(year,
-                                                         month);
-        int daysInMonth = days.GetDays(year, month);
-
-        Console.WriteLine("This month has " + daysInMonth + " days.");
-        for (int i = 0; i < daysInMonth; i++)
-        {
-            double heaterValue;
-
-            int workingHours;
-            while (true)
-            {
-                Console.Write("Enter working hours for day " + (i + 1) + ": ");
-                workingHours = Convert.ToInt32(Console.ReadLine());
-
-                if (workingHours >= 0 && workingHours <= 24)
-                    break;
-
-
-                Console.Clear();
-                Console.WriteLine("Working hours must be between 0 and 24.");
-
-            }
-
-
-            while (true)
-            {
-                Console.Write("Enter heater value for day " + (i + 1) + ": ");
-                heaterValue = Convert.ToDouble(Console.ReadLine());
-
-                if (heaterValue > 0)
-                    break;
-
-
-                Console.Clear();
-                Console.WriteLine("Value must be positive.");
-            }
-            Console.Clear();
-            DailyUse dailyUse = new DailyUse(workingHours, heaterValue);
-            houes.dailyUses.Add(dailyUse);
-
-        }
-        HeatingService heatingService = new HeatingService();
-        report report = new report(heatingService);
-        Console.WriteLine();
-        report.GenerateReport(houes, houes.heaters, daysInMonth);
+       
+        report report = new report(service);
+        DateTime now = DateTime.UtcNow;
+        int days = DateTime.DaysInMonth(now.Year, now.Month == 1 ? 12 : now.Month - 1);
+        //Console.WriteLine();
+        report.GenerateReport(houes, houes.Heaters, days);
+        service.PrintLastMonthDailyUsageWithThreads(houes);
+       await service.PrintLastMonthDailyUsageWithTasks(houes);
 
 
 
@@ -98,12 +70,23 @@ class Program
 
 
 
+
+
+
+        Console.ReadKey();
     }
+
+  
+
     enum HeaterType
     {
-        Electric,
-        Gas
+        Electric=1,
+        Gas=2,
+        
+
+
     };
+   
 }
 
 

@@ -8,16 +8,23 @@ namespace ConsoleApp19
 {
     internal class DailyUse
     {
-        private int WorkingHours;
-        public int workingHours
+        private DateTime date;
+        public DateTime Date
+        {
+            get { return date; }
+            set
+            {
+                
+                date = value;
+            }
+        }
+        private double WorkingHours;
+        public double workingHours
         {
             get { return WorkingHours; }
             set {
 
-                if (value < 0 || value > 24)
-                {
-                    throw new ArgumentException("Working hours must be between 0 and 24.");
-                }
+               
                 WorkingHours = value;
             }
         }
@@ -28,17 +35,15 @@ namespace ConsoleApp19
                 return HeaterValue; }
             set
             {
-                if (value <= 0)
-                {
-                    throw new ArgumentException("Heater value must be positive.");
-                }
                 HeaterValue = value;
+                
             }
         }
-       public  DailyUse(int workingHours, double heaterValue)
+       public  DailyUse(double workingHours, double heaterValue,DateTime date)
         {
             this.workingHours = workingHours;
             this.heaterValue = heaterValue;
+            this.Date = date;
         }
 
 

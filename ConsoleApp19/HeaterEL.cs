@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleApp19;
 
-namespace ConsoleApp19
+internal class ElectricHeater : Heater
 {
-    internal class HeaterEL: Heater
+  
+
+    public override double CalcuateEffect(double VALUE)
     {
-        public override double CalcuateEffect(double VALUE)
-        {
-            return VALUE * 1.1;
-        }
+        return VALUE * 0.9;
     }
 }

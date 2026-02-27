@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleApp19;
 
-namespace ConsoleApp19
+internal class GasHeater : Heater
 {
-    internal class Heatercas : Heater
+    
+
+    public override double CalcuateEffect(double v)
     {
-        public override double CalcuateEffect(double VALUE)
-        {
-            return VALUE * 0.9;
-        }
+        // Implement effect calculation logic for gas heater
+        return 0.8 *v;
     }
 }
