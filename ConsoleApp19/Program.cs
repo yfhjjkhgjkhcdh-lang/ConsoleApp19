@@ -56,13 +56,15 @@ class Program
 
 
        
-        report report = new report(service);
-        DateTime now = DateTime.UtcNow;
+       
+        DateTime now = DateTime.UtcNow.AddMonths(-1);
         int days = DateTime.DaysInMonth(now.Year, now.Month == 1 ? 12 : now.Month - 1);
         //Console.WriteLine();
-        report.GenerateReport(houes, houes.Heaters, days);
+       
         service.PrintLastMonthDailyUsageWithThreads(houes);
        await service.PrintLastMonthDailyUsageWithTasks(houes);
+        report report = new report(service);
+        report.GenerateReport(houes, houes.Heaters, days);
 
 
 
